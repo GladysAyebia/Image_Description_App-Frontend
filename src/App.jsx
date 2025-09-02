@@ -2,6 +2,8 @@ import { useState } from 'react';
 import './App.css';
 import ReactMarkdown from "react-markdown";
 import jsPDF from "jspdf";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSave, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [file, setFile] = useState(null);
@@ -190,19 +192,21 @@ function App() {
         {!sessionId && (
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="image-upload">Choose Image:</label>
-              <input 
-                id="image-upload" 
-                type="file" 
-                accept="image/jpeg, image/png" 
-                onChange={handleFileChange} 
-              />
-              {file && (
-                <div className="preview">
-                  <img src={URL.createObjectURL(file)} alt="Preview" />
-                </div>
-              )}
-            </div>
+  <label htmlFor="image-upload" className="custom-file-upload">
+  <FontAwesomeIcon icon={faUpload} /> Choose Image
+</label>
+<input 
+  id="image-upload" 
+  type="file" 
+  accept="image/jpeg, image/png" 
+  onChange={handleFileChange} 
+/>
+  {file && (
+    <div className="preview">
+      <img src={URL.createObjectURL(file)} alt="Preview" />
+    </div>
+  )}
+</div>
 
             <div className="form-group">
               <label htmlFor="prompt-input">Your Question:</label>
@@ -243,10 +247,10 @@ function App() {
             <div className="chat-controls">
               {sessionId && (
   <div className="chat-controls">
-    <button onClick={handleSavePDF}>💾 Save as PDF</button>
+    <button onClick={handleSavePDF}> <FontAwesomeIcon icon={faSave} /> Save as PDF</button>
     <button onClick={handleNewChat} style={{ marginLeft: "10px", backgroundColor: "#1cff08ff", color: "#fff" }}>
-      🆕 New Chat
-    </button>
+                  <FontAwesomeIcon icon={faPlus} /> New Chat
+                </button>
   </div>
 )}
 

@@ -60,13 +60,34 @@ body {
 .form-group {
   margin-bottom: 1.5rem;
 }
+/* Hide the standard file input element */
+#image-upload {
+  display: none;
+}
+
+/* Style the label to act as a custom button */
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #0056b3;
+}
+
 label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
 }
 #image-upload {
-  display: block;
+  display: none;
   margin-bottom: 1rem;
   background-color: #f0f6ff;
   border: 1px solid #ccd9ff;
@@ -200,4 +221,10 @@ button:hover:not(:disabled) {
     max-width: 90%;
     font-size: 0.9rem;
   }
+
+  button {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.7rem;
+
 }
