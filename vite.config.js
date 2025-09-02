@@ -9,9 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate', // ensures SW updates automatically
       manifest: {
-        name: 'My PWA App',
+        name: 'ImoScope',
         short_name: 'PWA',
-        description: 'A progressive web app built with Vite + React',
+        description: 'A progressive web app built with Vite + React- Upload an image and chat with ImoScope to analyze and understand it.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -24,12 +24,12 @@ export default defineConfig({
             type: 'image/png',
           },
           {
-            src: '/icons/pwa-512x512.png',
+            src: '/icons/pwa-192x192.png',
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: '/icons/pwa-512x512.png',
+            src: '/icons/pwa-192x192.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
