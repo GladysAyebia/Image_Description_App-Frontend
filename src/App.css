@@ -1,117 +1,203 @@
-/* src/App.css */
+/* Global */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
   margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: #f4f6f9;
   color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #a1b5ff;
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.tagline {
+  font-style: italic;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Main Container */
 .container {
-  background-color: rgb(255, 255, 255);
+  background-color: #fff;
   padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0px 3px 3px  3px rgba(0, 68, 255, 0.473);
-  width: 80%;
-  max-width: 500px;
-  margin-top: 2rem;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 68, 255, 0.15);
+  width: 95%;
+  max-width: 1200px; /* keep readability */
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-header {
+/* Hero */
+.hero {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
-
-h2 {
+.hero h2 {
   color: #1a73e8;
+  margin-bottom: 0.5rem;
+}
+.hero p {
+  color: #555;
 }
 
+/* Forms */
 .form-group {
   margin-bottom: 1.5rem;
 }
-
 label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
 }
-
-#image-upload{
+#image-upload {
   display: block;
-  margin-bottom: 1rem;  
-    background-color: #006eff37;
-  color: rgb(0, 0, 0);
-  border: none;
-  border-radius: 4px;
+  margin-bottom: 1rem;
+  background-color: #f0f6ff;
+  border: 1px solid #ccd9ff;
+  border-radius: 6px;
   padding: 0.75rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
-
-input[type="file"], textarea {
+textarea {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
-}
-
-textarea {
   resize: vertical;
 }
-
 .preview {
   margin-top: 1rem;
   text-align: center;
 }
-
 .preview img {
   max-width: 100%;
-  max-height: 200px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
-
 button {
-  width: 100%;
-  padding: 1rem;
   background-color: #1a73e8;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 1.1rem;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 button:disabled {
   background-color: #a8c8e8;
-  cursor: not-allowed;
 }
-
 button:hover:not(:disabled) {
   background-color: #155bb5;
 }
 
-.response-box {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #e8f0fe;
-  border: 1px solid #c9daea;
-  border-radius: 8px;
+/* Chat */
+.chat-box {
+  flex: 1;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #e1e5eb;
+  border-radius: 12px;
+  background: #f9fafc;
+  overflow-y: auto;
+  max-height: 500px;
+}
+.chat-message {
+  display: flex;
+  margin-bottom: 1rem;
+}
+.chat-message.user {
+  justify-content: flex-end;
+}
+.chat-message.assistant {
+  justify-content: flex-start;
+}
+.bubble {
+  max-width: 80%;
+  padding: 0.9rem 1.2rem;
+  border-radius: 16px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+}
+.user .bubble {
+  background: #1a73e8;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+.assistant .bubble {
+  background: #e8f0fe;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+.typing {
+  font-style: italic;
+  opacity: 0.7;
 }
 
+/* Chat input */
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.chat-input textarea {
+  flex: 1;
+  border-radius: 6px;
+}
+
+/* Error */
 .error-message {
   margin-top: 1rem;
   padding: 1rem;
   background-color: #fce8e8;
   color: #d93025;
   border: 1px solid #f9bdbd;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+  background: #f1f5f9;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+  .container {
+    padding: 1rem;
+    width: 95%;
+  }
+  .bubble {
+    max-width: 90%;
+    font-size: 0.9rem;
+  }
 }
