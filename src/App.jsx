@@ -36,7 +36,7 @@ function App() {
     try {
       setMessages([{ role: "user", text: prompt }]);
 
-      const res = await fetch('http://localhost:5000/api/analyze', {
+      const res = await fetch('https://image-description-app-backend.onrender.com/api/analyze', {
         method: 'POST',
         body: formData,
       });
@@ -73,7 +73,7 @@ function App() {
     try {
       setMessages((prev) => [...prev, { role: "user", text: prompt }]);
 
-      const res = await fetch('http://localhost:5000/api/followup', {
+      const res = await fetch('https://image-description-app-backend.onrender.com/api/followup', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, prompt }),
