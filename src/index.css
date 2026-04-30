@@ -6,41 +6,66 @@
 }
 
 :root {
-  --primary: #2a4d8f;   /* Business navy */
-  --secondary: #00a6a6; /* Teal accent */
-  --text-dark: #213547;
-  --text-light: #ffffff;
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-light: #818cf8;
+  --secondary: #06b6d4;
+  --secondary-dark: #0891b2;
+  --accent: #8b5cf6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --text-dark: #1e293b;
+  --text-medium: #64748b;
+  --text-light: #94a3b8;
+  --text-white: #ffffff;
   --background: #ffffff;
-  --background-alt: #f5f7fa;
-  --radius: 8px;
-  --transition: 0.3s ease;
+  --background-alt: #f8fafc;
+  --background-dark: #0f172a;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
-  background-color: var(--background);
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
   min-width: 320px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Headings */
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-weight: 700;
   color: var(--text-dark);
+  letter-spacing: -0.025em;
 }
 
 h1 {
   font-size: 3rem;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 p {
   margin-bottom: 1em;
-  color: #444;
+  color: var(--text-medium);
 }
 
 /* Links */
@@ -63,27 +88,42 @@ button, .btn {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+button:disabled, .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: var(--text-light);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--text-white);
 }
 
-.btn-primary:hover {
-  background: #1f3a6b;
-  transform: translateY(-2px);
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #3730a3 100%);
 }
 
 .btn-secondary {
-  background: var(--secondary);
-  color: var(--text-light);
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+  color: var(--text-white);
 }
 
-.btn-secondary:hover {
-  background: #008080;
-  transform: translateY(-2px);
+.btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--secondary-dark) 0%, #0e7490 100%);
 }
 
 /* Sections */
@@ -104,4 +144,53 @@ section.alt {
   section {
     padding: 2rem 1rem;
   }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
 }

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import ReactMarkdown from "react-markdown";
 import jsPDF from "jspdf";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faPlus, faUpload, faPaperPlane, faImage } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [file, setFile] = useState(null);
@@ -12,11 +12,63 @@ function App() {
   const [messages, setMessages] = useState([]); 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const chatBoxRef = useRef(null);
+  const followUpRef = useRef(null);
 
-  const handleFileChange = (e) => setFile(e.target.files[0]);
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+      setError('File size must be less than 5MB');
+      return;
+    }
+    setFile(selectedFile);
+    setError(null);
+  };
+
   const handlePromptChange = (e) => setPrompt(e.target.value);
 
-  // First request
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
+      if (droppedFile.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+      setFile(droppedFile);
+      setError(null);
+    } else {
+      setError('Please drop a valid image file');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (sessionId) {
+        followUpRef.current?.closest('form')?.requestSubmit();
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -58,7 +110,6 @@ function App() {
     }
   };
 
-  // Follow-up
   const handleFollowUp = async (e) => {
     e.preventDefault();
     setError(null);
@@ -96,17 +147,16 @@ function App() {
   };
 
   const handleNewChat = () => {
-  if (window.confirm("Are you sure you want to start a new chat? This will clear your current conversation.")) {
-    setFile(null);
-    setPrompt('');
-    setSessionId(null);
-    setMessages([]);
-    setError(null);
-    setIsLoading(false);
-  }
-};
+    if (window.confirm("Are you sure you want to start a new chat? This will clear your current conversation.")) {
+      setFile(null);
+      setPrompt('');
+      setSessionId(null);
+      setMessages([]);
+      setError(null);
+      setIsLoading(false);
+    }
+  };
 
-  // Save chat as PDF with image
   const handleSavePDF = () => {
     if (messages.length === 0) {
       alert("No chat to save!");
@@ -115,29 +165,25 @@ function App() {
 
     const doc = new jsPDF();
 
-    // Add logo
     const logo = new Image();
     logo.src = "/icons/pwa-192x192.png";
     doc.addImage(logo, "PNG", 10, 10, 20, 20);
 
-    // Title
     doc.setFontSize(16);
     doc.text("ImoScope - Chat Report", 40, 20);
 
     doc.setFontSize(10);
     doc.text(`Date: ${new Date().toLocaleString()}`, 40, 28);
 
-    let y = 40; // vertical offset
+    let y = 40;
 
-    // Add uploaded image at top
     if (file) {
       const reader = new FileReader();
       reader.onload = function(e) {
         const imgData = e.target.result;
-        doc.addImage(imgData, 'JPEG', 10, y, 60, 60); // size of image
+        doc.addImage(imgData, 'JPEG', 10, y, 60, 60);
         y += 70;
 
-        // Add chat messages after image
         messages.forEach((m) => {
           const role = m.role === "assistant" ? "ImoScope AI" : "User";
           const text = `${role}: ${m.text}`;
@@ -155,7 +201,6 @@ function App() {
       };
       reader.readAsDataURL(file);
     } else {
-      // If no image, just save messages
       messages.forEach((m) => {
         const role = m.role === "assistant" ? "ImoScope AI" : "User";
         const text = `${role}: ${m.text}`;
@@ -174,7 +219,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">
           <img src="/icons/pwa-192x192.png" width={"70px"} alt="logo" />
@@ -191,22 +235,27 @@ function App() {
 
         {!sessionId && (
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-  <label htmlFor="image-upload" className="custom-file-upload">
-  <FontAwesomeIcon icon={faUpload} /> Choose Image
-</label>
-<input 
-  id="image-upload" 
-  type="file" 
-  accept="image/jpeg, image/png" 
-  onChange={handleFileChange} 
-/>
-  {file && (
-    <div className="preview">
-      <img src={URL.createObjectURL(file)} alt="Preview" />
-    </div>
-  )}
-</div>
+            <div 
+              className="form-group"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <label htmlFor="image-upload" className={`custom-file-upload ${isDragging ? 'dragging' : ''}`}>
+                <FontAwesomeIcon icon={faImage} /> {isDragging ? 'Drop Image Here' : 'Choose Image'}
+              </label>
+              <input 
+                id="image-upload" 
+                type="file" 
+                accept="image/jpeg, image/png" 
+                onChange={handleFileChange} 
+              />
+              {file && (
+                <div className="preview">
+                  <img src={URL.createObjectURL(file)} alt="Preview" />
+                </div>
+              )}
+            </div>
 
             <div className="form-group">
               <label htmlFor="prompt-input">Your Question:</label>
@@ -221,14 +270,23 @@ function App() {
             </div>
 
             <button type="submit" disabled={isLoading}>
-              {isLoading ? 'Analyzing...' : 'Analyze Image'}
+              {isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faUpload} /> Analyze Image
+                </>
+              )}
             </button>
           </form>
         )}
 
         {sessionId && (
           <>
-            <div className="chat-box">
+            <div className="chat-box" ref={chatBoxRef}>
               {messages.map((m, idx) => (
                 <div key={idx} className={`chat-message ${m.role}`}>
                   <div className="bubble">
@@ -238,33 +296,35 @@ function App() {
               ))}
               {isLoading && (
                 <div className="chat-message assistant">
-                  <div className="bubble typing">...</div>
+                  <div className="bubble typing">
+                    <span className="typing-dots">
+                      <span>.</span><span>.</span><span>.</span>
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Chat Controls */}
             <div className="chat-controls">
-              {sessionId && (
-  <div className="chat-controls">
-    <button onClick={handleSavePDF}> <FontAwesomeIcon icon={faSave} /> Save as PDF</button>
-    <button onClick={handleNewChat} style={{ marginLeft: "10px", backgroundColor: "#1cff08ff", color: "#fff" }}>
-                  <FontAwesomeIcon icon={faPlus} /> New Chat
-                </button>
-  </div>
-)}
-
+              <button onClick={handleSavePDF}>
+                <FontAwesomeIcon icon={faSave} /> Save as PDF
+              </button>
+              <button onClick={handleNewChat}>
+                <FontAwesomeIcon icon={faPlus} /> New Chat
+              </button>
             </div>
 
             <form onSubmit={handleFollowUp} className="chat-input">
               <textarea
+                ref={followUpRef}
                 value={prompt}
                 onChange={handlePromptChange}
-                placeholder="Ask a follow-up..."
+                onKeyDown={handleKeyDown}
+                placeholder="Ask a follow-up... (Press Enter to send)"
                 rows="2"
               />
               <button type="submit" disabled={isLoading}>
-                Send
+                <FontAwesomeIcon icon={faPaperPlane} /> Send
               </button>
             </form>
           </>
